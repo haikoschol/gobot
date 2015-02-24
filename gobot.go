@@ -5,6 +5,12 @@ import "errors"
 
 const MaxMsgLen = 510
 
+type Message struct {
+	prefix     string
+	command    string
+	parameters []string
+}
+
 func isCompleteMessage(buf []byte) bool {
 	l := len(buf)
 
@@ -29,4 +35,12 @@ func ReadMessage(reader io.Reader) (string, error) {
 	}
 
 	return "", errors.New("message too long")
+}
+
+func ParseMessage(_ string) (*Message, error) {
+	return &Message{
+		prefix:     "",
+		command:    "",
+		parameters: make([]string, 0),
+	}, nil
 }
