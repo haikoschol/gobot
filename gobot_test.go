@@ -37,6 +37,21 @@ func makeMsg(s string, cs int) *testMsg {
 	}
 }
 
+func makeMsgOfLen(char byte, length int, cs int) *testMsg {
+	str := makeStrOfLen(char, length)
+	return makeMsg(str, cs)
+}
+
+func makeStrOfLen(char byte, length int) string {
+	buf := make([]byte, length)
+
+	for i := 0; i < length; i++ {
+		buf[i] = char
+	}
+
+	return string(buf)
+}
+
 func assert(actual string, expected string, err error, t *testing.T) {
 	if actual != expected || err != nil {
 		t.Errorf("Expected message to be %q. Instead got %q. error: %v",
@@ -65,4 +80,24 @@ func TestReadMessage_partial_message(t *testing.T) {
 	msg, err := ReadMessage(m)
 
 	assert(msg, expected, err, t)
+}
+
+func TestReadMessage_longest_valid_message(t *testing.T) {
+	expected := makeStrOfLen('a', MaxMsgLen)
+	m := makeMsg(expected, 0)
+
+	msg, err := ReadMessage(m)
+
+	assert(msg, expected, err, t)
+}
+
+func TestReadMessage_message_too_long(t *testing.T) {
+	m := makeMsgOfLen('a', MaxMsgLen+1, 0)
+
+	_, err := ReadMessage(m)
+
+	if err == nil {
+		t.Error("ReadMessage() accepts messages longer than", MaxMsgLen,
+			"bytes.")
+	}
 }
