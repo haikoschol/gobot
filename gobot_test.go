@@ -57,3 +57,12 @@ func TestReadMessage_empty_message(t *testing.T) {
 	msg, err := ReadMessage(makeMsg("", 0))
 	assert(msg, "", err, t)
 }
+
+func TestReadMessage_partial_message(t *testing.T) {
+	expected := "Hello"
+	m := makeMsg(expected, 3)
+
+	msg, err := ReadMessage(m)
+
+	assert(msg, expected, err, t)
+}
