@@ -9,19 +9,20 @@ type testMsg struct {
 	chunksize int
 }
 
-func (m testMsg) Read(p []byte) (n int, err error) {
+func (m *testMsg) Read(p []byte) (n int, err error) {
 	err = nil
 	srcLen := float64(len(m.content) - m.position)
 	dstLen := float64(len(p))
 
 	if m.chunksize > 0 {
-		n = int(math.Min(float64(m.chunksize), dstLen))
+		tmp := math.Min(float64(m.chunksize), dstLen)
+		n = int(math.Min(tmp, srcLen))
 	} else {
 		n = int(math.Min(srcLen, dstLen))
 	}
 
-	for i := m.position; i < n; i++ {
-		p[i] = m.content[i]
+	for i := 0; i < n; i++ {
+		p[i] = m.content[m.position+i]
 	}
 
 	m.position += n
