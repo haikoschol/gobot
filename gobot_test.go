@@ -46,3 +46,10 @@ func TestReadMessage(t *testing.T) {
 		t.Error("Expected message to be \"" + expected + "\".")
 	}
 }
+
+func TestReadMessage_empty_message(t *testing.T) {
+	msg, err := ReadMessage(makeMsg("", 0))
+	if msg != "" || err != nil {
+		t.Error("Expected empty message. Instead got:", msg)
+	}
+}
