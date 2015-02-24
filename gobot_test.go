@@ -36,20 +36,23 @@ func makeMsg(s string, cs int) *testMsg {
 	}
 }
 
+func assert(actual string, expected string, err error, t *testing.T) {
+	if actual != expected || err != nil {
+		t.Errorf("Expected message to be %q. Instead got %q. error: %v",
+			expected, actual, err)
+	}
+}
+
 func TestReadMessage(t *testing.T) {
 	expected := "What's up?"
 	m := makeMsg(expected, 0)
 
 	msg, err := ReadMessage(m)
 
-	if msg != expected || err != nil {
-		t.Error("Expected message to be \"" + expected + "\".")
-	}
+	assert(msg, expected, err, t)
 }
 
 func TestReadMessage_empty_message(t *testing.T) {
 	msg, err := ReadMessage(makeMsg("", 0))
-	if msg != "" || err != nil {
-		t.Error("Expected empty message. Instead got:", msg)
-	}
+	assert(msg, "", err, t)
 }
