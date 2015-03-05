@@ -110,6 +110,20 @@ func TestParseMessage_nonempty_prefix_command_and_parameters(t *testing.T) {
 	if msg.prefix == "" || msg.command == "" || len(msg.parameters) == 0 ||
 		err != nil {
 		t.Error("Expected non-empty prefix, command and parameters. prefix:",
-			msg.prefix, "command: ", msg.command, "parameters: ", msg.parameters)
+			msg.prefix, "command: ", msg.command, "parameters: ",
+			msg.parameters)
+	}
+}
+
+func TestParseMessage_no_prefix(t *testing.T) {
+	raw := "PRIVMSG Wiz :Are you receiving this message"
+
+	msg, err := ParseMessage(raw)
+
+	if msg.prefix != "" || msg.command == "" || len(msg.parameters) == 0 ||
+		err != nil {
+		t.Error("Expected empty prefix and non-empty command and parameters. "+
+			"prefix:", msg.prefix, "command: ", msg.command, "parameters: ",
+			msg.parameters)
 	}
 }

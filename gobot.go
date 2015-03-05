@@ -42,10 +42,22 @@ func ReadMessage(reader io.Reader) (string, error) {
 
 func ParseMessage(raw string) (*Message, error) {
 	parts := strings.Split(raw, " ")
+	var prefix, command string
+	var parameters []string
+
+	if strings.HasPrefix(parts[0], ":") {
+		prefix = parts[0]
+		command = parts[1]
+		parameters = parts[2:]
+	} else {
+		prefix = ""
+		command = parts[0]
+		parameters = parts[1:]
+	}
 
 	return &Message{
-		prefix:     parts[0],
-		command:    parts[1],
-		parameters: parts[2:],
+		prefix:     prefix,
+		command:    command,
+		parameters: parameters,
 	}, nil
 }
