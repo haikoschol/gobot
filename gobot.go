@@ -6,13 +6,16 @@ import (
 	"strings"
 )
 
-const MaxMsgLen = 510
+const maxMsgLen = 510
 
 type message struct {
 	prefix     string
 	command    string
 	parameters []string
 }
+
+type CommandHandler func(parameters []string) string
+type CommandHandlers map[string]CommandHandler
 
 func isCompleteMessage(buf []byte) bool {
 	l := len(buf)
@@ -25,7 +28,7 @@ func isCompleteMessage(buf []byte) bool {
 }
 
 func readMessage(reader io.Reader) (string, error) {
-	buf := make([]byte, MaxMsgLen+2)
+	buf := make([]byte, maxMsgLen+2)
 	pos := 0
 
 	for len(buf[pos:]) != 0 {
@@ -60,4 +63,8 @@ func parseMessage(raw string) (*message, error) {
 		command:    command,
 		parameters: parameters,
 	}, nil
+}
+
+func dispatch(msg *message, handlers *CommandHandlers) (CommandHandler, error) {
+	return nil, nil
 }

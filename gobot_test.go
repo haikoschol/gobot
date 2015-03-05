@@ -88,7 +88,7 @@ func Test_readMessage_partial_message(t *testing.T) {
 }
 
 func Test_readMessage_longest_valid_message(t *testing.T) {
-	expected := makeStrOfLen('a', MaxMsgLen)
+	expected := makeStrOfLen('a', maxMsgLen)
 	m := makeMsg(expected, 0)
 
 	msg, err := readMessage(m)
@@ -97,12 +97,12 @@ func Test_readMessage_longest_valid_message(t *testing.T) {
 }
 
 func Test_readMessage_message_too_long(t *testing.T) {
-	m := makeMsgOfLen('a', MaxMsgLen+1, 0)
+	m := makeMsgOfLen('a', maxMsgLen+1, 0)
 
 	_, err := readMessage(m)
 
 	if err == nil {
-		t.Error("ReadMessage() accepts messages longer than", MaxMsgLen,
+		t.Error("ReadMessage() accepts messages longer than", maxMsgLen,
 			"bytes.")
 	}
 }
@@ -142,4 +142,15 @@ func Test_parseMessage_prefix_marker_gets_removed(t *testing.T) {
 	msg, err := parseMessage(raw)
 
 	assert("prefix", msg.prefix, expected_prefix, err, t)
+}
+
+func Test_dispatch_no_handlers(t *testing.T) {
+	handlers := &CommandHandlers{}
+	msg := &message{"", "foo", make([]string, 0)}
+
+	handler, err := dispatch(msg, handlers)
+
+	if handler != nil || err != nil {
+		t.Error("Expected nil handler and no error. Istead got:", handler, err)
+	}
 }
