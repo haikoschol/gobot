@@ -102,7 +102,7 @@ func TestReadMessage_message_too_long(t *testing.T) {
 	}
 }
 
-func TestParseMessage_nonempty_prefix_command_and_parameters(t *testing.T) {
+func Test_ParseMessage_nonempty_prefix_command_and_parameters(t *testing.T) {
 	raw := ":Angel!wings@irc.org PRIVMSG Wiz :Are you receiving this message"
 
 	msg, err := ParseMessage(raw)
@@ -115,7 +115,7 @@ func TestParseMessage_nonempty_prefix_command_and_parameters(t *testing.T) {
 	}
 }
 
-func TestParseMessage_no_prefix(t *testing.T) {
+func Test_ParseMessage_no_prefix(t *testing.T) {
 	raw := "PRIVMSG Wiz :Are you receiving this message"
 
 	msg, err := ParseMessage(raw)
