@@ -1,7 +1,10 @@
 package main
 
-import "io"
-import "errors"
+import (
+	"errors"
+	"io"
+	"strings"
+)
 
 const MaxMsgLen = 510
 
@@ -37,10 +40,12 @@ func ReadMessage(reader io.Reader) (string, error) {
 	return "", errors.New("message too long")
 }
 
-func ParseMessage(_ string) (*Message, error) {
+func ParseMessage(raw string) (*Message, error) {
+	parts := strings.Split(raw, " ")
+
 	return &Message{
-		prefix:     "",
-		command:    "",
-		parameters: make([]string, 0),
+		prefix:     parts[0],
+		command:    parts[1],
+		parameters: parts[2:],
 	}, nil
 }
