@@ -46,7 +46,7 @@ func ParseMessage(raw string) (*Message, error) {
 	var parameters []string
 
 	if strings.HasPrefix(parts[0], ":") {
-		prefix = parts[0]
+		prefix = parts[0][1:]
 		command = parts[1]
 		parameters = parts[2:]
 	} else {

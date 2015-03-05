@@ -1,7 +1,10 @@
 package main
 
 import "testing"
-import "math"
+import (
+	"fmt"
+	"math"
+)
 
 type testMsg struct {
 	content   string
@@ -52,9 +55,11 @@ func makeStrOfLen(char byte, length int) string {
 	return string(buf)
 }
 
-func assert(actual string, expected string, err error, t *testing.T) {
+func assert(what string, actual string, expected string, err error,
+	t *testing.T) {
+
 	if actual != expected || err != nil {
-		t.Errorf("Expected message to be %q. Instead got %q. error: %v",
+		t.Errorf("Expected %s to be %q. Instead got %q. error: %v", what,
 			expected, actual, err)
 	}
 }
@@ -65,12 +70,12 @@ func TestReadMessage(t *testing.T) {
 
 	msg, err := ReadMessage(m)
 
-	assert(msg, expected, err, t)
+	assert("message", msg, expected, err, t)
 }
 
 func TestReadMessage_empty_message(t *testing.T) {
 	msg, err := ReadMessage(makeMsg("", 0))
-	assert(msg, "", err, t)
+	assert("message", msg, "", err, t)
 }
 
 func TestReadMessage_partial_message(t *testing.T) {
@@ -79,7 +84,7 @@ func TestReadMessage_partial_message(t *testing.T) {
 
 	msg, err := ReadMessage(m)
 
-	assert(msg, expected, err, t)
+	assert("message", msg, expected, err, t)
 }
 
 func TestReadMessage_longest_valid_message(t *testing.T) {
@@ -88,7 +93,7 @@ func TestReadMessage_longest_valid_message(t *testing.T) {
 
 	msg, err := ReadMessage(m)
 
-	assert(msg, expected, err, t)
+	assert("message", msg, expected, err, t)
 }
 
 func TestReadMessage_message_too_long(t *testing.T) {
@@ -126,4 +131,15 @@ func Test_ParseMessage_no_prefix(t *testing.T) {
 			"prefix:", msg.prefix, "command: ", msg.command, "parameters: ",
 			msg.parameters)
 	}
+}
+
+func Test_ParseMessage_prefix_marker_gets_removed(t *testing.T) {
+	expected_prefix := "Angel!wings@irc.org"
+
+	raw := fmt.Sprintf(":%s PRIVMSG Wiz Are you receiving this message",
+		expected_prefix)
+
+	msg, err := ParseMessage(raw)
+
+	assert("prefix", msg.prefix, expected_prefix, err, t)
 }
