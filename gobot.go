@@ -8,7 +8,7 @@ import (
 
 const MaxMsgLen = 510
 
-type Message struct {
+type message struct {
 	prefix     string
 	command    string
 	parameters []string
@@ -24,7 +24,7 @@ func isCompleteMessage(buf []byte) bool {
 	return buf[l-2] == '\r' && buf[l-1] == '\n'
 }
 
-func ReadMessage(reader io.Reader) (string, error) {
+func readMessage(reader io.Reader) (string, error) {
 	buf := make([]byte, MaxMsgLen+2)
 	pos := 0
 
@@ -40,7 +40,7 @@ func ReadMessage(reader io.Reader) (string, error) {
 	return "", errors.New("message too long")
 }
 
-func ParseMessage(raw string) (*Message, error) {
+func parseMessage(raw string) (*message, error) {
 	parts := strings.Split(raw, " ")
 	var prefix, command string
 	var parameters []string
@@ -55,7 +55,7 @@ func ParseMessage(raw string) (*Message, error) {
 		parameters = parts[1:]
 	}
 
-	return &Message{
+	return &message{
 		prefix:     prefix,
 		command:    command,
 		parameters: parameters,

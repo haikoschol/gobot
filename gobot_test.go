@@ -64,42 +64,42 @@ func assert(what string, actual string, expected string, err error,
 	}
 }
 
-func TestReadMessage(t *testing.T) {
+func Test_readMessage(t *testing.T) {
 	expected := "What's up?"
 	m := makeMsg(expected, 0)
 
-	msg, err := ReadMessage(m)
+	msg, err := readMessage(m)
 
 	assert("message", msg, expected, err, t)
 }
 
-func TestReadMessage_empty_message(t *testing.T) {
-	msg, err := ReadMessage(makeMsg("", 0))
+func Test_readMessage_empty_message(t *testing.T) {
+	msg, err := readMessage(makeMsg("", 0))
 	assert("message", msg, "", err, t)
 }
 
-func TestReadMessage_partial_message(t *testing.T) {
+func Test_readMessage_partial_message(t *testing.T) {
 	expected := "Hello"
 	m := makeMsg(expected, 3)
 
-	msg, err := ReadMessage(m)
+	msg, err := readMessage(m)
 
 	assert("message", msg, expected, err, t)
 }
 
-func TestReadMessage_longest_valid_message(t *testing.T) {
+func Test_readMessage_longest_valid_message(t *testing.T) {
 	expected := makeStrOfLen('a', MaxMsgLen)
 	m := makeMsg(expected, 0)
 
-	msg, err := ReadMessage(m)
+	msg, err := readMessage(m)
 
 	assert("message", msg, expected, err, t)
 }
 
-func TestReadMessage_message_too_long(t *testing.T) {
+func Test_readMessage_message_too_long(t *testing.T) {
 	m := makeMsgOfLen('a', MaxMsgLen+1, 0)
 
-	_, err := ReadMessage(m)
+	_, err := readMessage(m)
 
 	if err == nil {
 		t.Error("ReadMessage() accepts messages longer than", MaxMsgLen,
@@ -107,10 +107,10 @@ func TestReadMessage_message_too_long(t *testing.T) {
 	}
 }
 
-func Test_ParseMessage_nonempty_prefix_command_and_parameters(t *testing.T) {
+func Test_parseMessage_nonempty_prefix_command_and_parameters(t *testing.T) {
 	raw := ":Angel!wings@irc.org PRIVMSG Wiz :Are you receiving this message"
 
-	msg, err := ParseMessage(raw)
+	msg, err := parseMessage(raw)
 
 	if msg.prefix == "" || msg.command == "" || len(msg.parameters) == 0 ||
 		err != nil {
@@ -120,10 +120,10 @@ func Test_ParseMessage_nonempty_prefix_command_and_parameters(t *testing.T) {
 	}
 }
 
-func Test_ParseMessage_no_prefix(t *testing.T) {
+func Test_parseMessage_no_prefix(t *testing.T) {
 	raw := "PRIVMSG Wiz :Are you receiving this message"
 
-	msg, err := ParseMessage(raw)
+	msg, err := parseMessage(raw)
 
 	if msg.prefix != "" || msg.command == "" || len(msg.parameters) == 0 ||
 		err != nil {
@@ -133,13 +133,13 @@ func Test_ParseMessage_no_prefix(t *testing.T) {
 	}
 }
 
-func Test_ParseMessage_prefix_marker_gets_removed(t *testing.T) {
+func Test_parseMessage_prefix_marker_gets_removed(t *testing.T) {
 	expected_prefix := "Angel!wings@irc.org"
 
 	raw := fmt.Sprintf(":%s PRIVMSG Wiz Are you receiving this message",
 		expected_prefix)
 
-	msg, err := ParseMessage(raw)
+	msg, err := parseMessage(raw)
 
 	assert("prefix", msg.prefix, expected_prefix, err, t)
 }
