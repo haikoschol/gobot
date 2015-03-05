@@ -65,6 +65,6 @@ func parseMessage(raw string) (*message, error) {
 	}, nil
 }
 
-func dispatch(msg *message, handlers *CommandHandlers) (CommandHandler, error) {
-	return nil, nil
+func dispatch(msg *message, handlers *CommandHandlers) CommandHandler {
+	return (*handlers)[msg.command]
 }

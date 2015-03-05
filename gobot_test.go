@@ -148,9 +148,22 @@ func Test_dispatch_no_handlers(t *testing.T) {
 	handlers := &CommandHandlers{}
 	msg := &message{"", "foo", make([]string, 0)}
 
-	handler, err := dispatch(msg, handlers)
+	handler := dispatch(msg, handlers)
 
-	if handler != nil || err != nil {
-		t.Error("Expected nil handler and no error. Istead got:", handler, err)
+	if handler != nil {
+		t.Error("Expected nil handler and no error. Instead got:", handler)
+	}
+}
+
+func Test_dispatch_finds_handler(t *testing.T) {
+	expectedResponse := "bar"
+	expectedHandler := func(_ []string) string { return expectedResponse }
+	handlers := &CommandHandlers{"foo": expectedHandler}
+	msg := &message{"", "foo", make([]string, 0)}
+
+	handler := dispatch(msg, handlers)
+
+	if handler == nil || handler([]string{}) != expectedResponse {
+		t.Error("dispatch() did not return the expected command handler.")
 	}
 }
