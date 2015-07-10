@@ -28,9 +28,28 @@ There are public and private messages. A public message is sent by calling the
 `msg` command in a channel. A private message is sent by calling the `msg`
 command in a private chat with the bot.
 
-There is a maximum number of messages per recipient. When that limit is reached,
-no more messages are accepted and the bot responds with an error message.
+Messages have the attributes
+* sender
+* timestamp
+* private
+* body
 
-There is a maximum number of recipients. When that limit is reached, no more
+When a message to a new recipient is sent, the bot creates a mailbox for that
+recipient. The mailbox is added to the repository of mailboxes.
+
+The messages are stored until a user with the given recipient nick joins the
+channel. Private messages are sent in a private chat, public ones in the
+channel. They are sent in the format `<timestamp> <sender> <body>`. After a
+message is sent, it is removed from the recipients mailbox. Empty mailboxes are
+removed from the repository.
+
+Messages are not sent immediately if the recipient is currently present in the
+channel.
+
+There is a maximum number of messages per mailboxes. When that limit is reached,
+no more messages to that recipient are accepted and the bot responds with an
+error message.
+
+There is a maximum number of mailboxes. When that limit is reached, no more
 messages to new recipients are accepted and the bot responds with an error
 message.
