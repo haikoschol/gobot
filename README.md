@@ -46,7 +46,7 @@ removed from the repository.
 Messages are not sent immediately if the recipient is currently present in the
 channel.
 
-There is a maximum number of messages per mailboxes. When that limit is reached,
+There is a maximum number of messages per mailbox. When that limit is reached,
 no more messages to that recipient are accepted and the bot responds with an
 error message.
 
