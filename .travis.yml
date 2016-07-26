@@ -3,5 +3,5 @@ language: go
 script: go test -race -v
 
 go:
-    - tip
+    - 1.6
 

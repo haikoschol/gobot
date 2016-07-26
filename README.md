@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/haikoschol/gobot.svg?branch=master)](https://travis-ci.org/haikoschol/gobot)
+
 # gobot
 
 ## My first Go program
