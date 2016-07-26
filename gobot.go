@@ -4,6 +4,7 @@ import (
 	"errors"
 	"io"
 	"strings"
+	"fmt"
 )
 
 const maxMsgLen = 510
@@ -67,4 +68,8 @@ func parseMessage(raw string) (*message, error) {
 
 func dispatch(msg *message, handlers *CommandHandlers) CommandHandler {
 	return (*handlers)[msg.command]
+}
+
+func main() {
+	fmt.Printf("It's alive!\n")
 }
