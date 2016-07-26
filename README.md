@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/haikoschol/gobot.svg?branch=master)](https://travis-ci.org/haikoschol/gobot)
+[![Build Status](https://travis-ci.org/haikoschol/gobot.svg?branch=master)](https://travis-ci.org/haikoschol/gobot) [![Coverage Status](https://coveralls.io/repos/github/haikoschol/gobot/badge.svg?branch=master)](https://coveralls.io/github/haikoschol/gobot?branch=master)
 
 # gobot
 

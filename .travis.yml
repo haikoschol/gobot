@@ -1,6 +1,10 @@
 language: go
 
-script: go test -race -v
+before_install:
+    - go get github.com/mattn/goveralls
+    - go get golang.org/x/tools/cmd/cover
+
+script: go test -race -v -covermode=count -coverprofile=profile.cov && goveralls -coverprofile=profile.cov -service=travis-ci
 
 go:
     - 1.6
