@@ -9,3 +9,7 @@ script: go test -race -v -covermode=count -coverprofile=profile.cov && goveralls
 go:
     - 1.6
 
+addons:
+  code_climate:
+    repo_token:
+      secure: "E/cvHL4D84PXrh1e5ptdIMmFzqFA96XeIOHERwCJ9Vkourb5dGBPXKYVld1DOxNzUN5Hqiq03WKdTBFxYjXdySlTZI9ZJg6l8Lz/p7QNYTkddpptqLP0Nl83Zcd9orfVLFaw1bDtUxty4hoUjT6a2TZj+31RIPI3lJI7AaUoT3EPL+1mzApd2CJCcV/YNPtaOlNmWfKb1Qo5a6/tBcnuQNPujg2onQVuAZzenoMhs9zSakfCVwIqqyTReyrFx1I8hbJaQjErhUobFGiz5b8lLUcfgtvUTJ6rshmhTRppM6Be4FmwDXE2NN4ywohRtem1/eaJ6HErATkB81pJlcQ7aklABhil9SmCZweqbCBbP8v/rt7Q3cin39sAFmQ0m7p1XrtBdFfFQ+Bz7wyJYP50xCVxHushBswa/XP2XoePHtVIGgPRGY6Omr+Ve+qIhYTs4dHVppi6DZdb/RI7QPQkkrXWpcKv68YY+FgSoizorQb7oTx3QbGhDalqTKBH7eK2lXnmPeoIPDU1UZ0N72mA5M22gx7Wp2alCgoJwFBHTOPM3fLqfNd65VaLAyfEFG8joLoIWkZqII7+eYpjAx3hu2jU1Lw5a7zeO5QBAjwUIpn/gax3ZrXuYt+LFfXasRpA6lJb3edQsv7x4B1du6lSM1pbMGACnggZvbUlsvYSpYI="

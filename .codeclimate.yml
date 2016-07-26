@@ -1,0 +1,20 @@
+---
+engines:
+  # golang
+  gofmt:
+    enabled: true
+  golint:
+    enabled: true
+    config:
+      min_confidence: 0.9
+  govet:
+    enabled: true
+  # misc
+  markdownlint:
+    enabled: true
+  fixme:
+    enabled: true
+ratings:
+  paths:
+    - "**.go"
+    - "**.md"
