@@ -64,6 +64,12 @@ func assert(what string, actual string, expected string, err error,
 	}
 }
 
+func assertError(err error, t *testing.T) {
+	if err == nil {
+		t.Error("Expected error, got nil")
+	}
+}
+
 func Test_readMessage(t *testing.T) {
 	expected := "What's up?"
 	m := makeMsg(expected, 0)
@@ -101,10 +107,7 @@ func Test_readMessage_message_too_long(t *testing.T) {
 
 	_, err := readMessage(m)
 
-	if err == nil {
-		t.Error("ReadMessage() accepts messages longer than", maxMsgLen,
-			"bytes.")
-	}
+	assertError(err, t)
 }
 
 func Test_parseMessage_nonempty_prefix_command_and_parameters(t *testing.T) {
@@ -125,10 +128,12 @@ func Test_parseMessage_no_prefix(t *testing.T) {
 
 	msg, err := parseMessage(raw)
 
-	if msg.prefix != "" || msg.command == "" || len(msg.parameters) == 0 ||
-		err != nil {
+	assert("parsed message", msg.prefix, "", err, t)
+	assert("parsed message", msg.command, "PRIVMSG", err, t)
+
+	if len(msg.parameters) < 2 || err != nil {
 		t.Error("Expected empty prefix and non-empty command and parameters. "+
-			"prefix:", msg.prefix, "command: ", msg.command, "parameters: ",
+			"prefix:", msg.prefix, "command:", msg.command, "parameters:",
 			msg.parameters)
 	}
 }
@@ -136,12 +141,52 @@ func Test_parseMessage_no_prefix(t *testing.T) {
 func Test_parseMessage_prefix_marker_gets_removed(t *testing.T) {
 	expected_prefix := "Angel!wings@irc.org"
 
-	raw := fmt.Sprintf(":%s PRIVMSG Wiz Are you receiving this message",
+	raw := fmt.Sprintf(":%s PRIVMSG Wiz :Are you receiving this message",
 		expected_prefix)
 
 	msg, err := parseMessage(raw)
 
 	assert("prefix", msg.prefix, expected_prefix, err, t)
+}
+
+func Test_parseMessage_privmsg_recipient_and_body_in_parameters(t *testing.T) {
+	expected_command := "PRIVMSG"
+	expected_recipient := "Wiz"
+	expected_body := "Are you receiving this message"
+
+	raw := fmt.Sprintf("%s %s :%s", expected_command, expected_recipient,
+		expected_body)
+
+	msg, err := parseMessage(raw)
+
+	assert("parsed message", msg.command, expected_command, err, t)
+	assert("parsed message", msg.parameters[0], expected_recipient, err, t)
+	assert("parsed message", msg.parameters[1], expected_body, err, t)
+}
+
+func runInvalidPrivmsgTest(msg string, t *testing.T) {
+	_, err := parseMessage(msg)
+	assertError(err, t)
+}
+
+func Test_parseMessage_invalid_privmsg_missing_body(t *testing.T) {
+	runInvalidPrivmsgTest(":Angel!wings@irc.org PRIVMSG Wiz", t)
+}
+
+func Test_parseMessage_invalid_privmsg_missing_parameters(t *testing.T) {
+	runInvalidPrivmsgTest(":Angel!wings@irc.org PRIVMSG", t)
+}
+
+func Test_parseMessage_invalid_privmsg_without_prefix_missing_parameters(t *testing.T) {
+	runInvalidPrivmsgTest("PRIVMSG", t)
+}
+
+func Test_parseMessage_invalid_privmsg_prefix_marker_without_prefix(t *testing.T) {
+	runInvalidPrivmsgTest(": PRIVMSG Wiz :Whassup?", t)
+}
+
+func Test_parseMessage_invalid_privmsg_empty_body(t *testing.T) {
+	runInvalidPrivmsgTest(":Angel!wings@irc.org PRIVMSG Wiz :", t)
 }
 
 func Test_dispatch_no_handlers(t *testing.T) {

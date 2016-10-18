@@ -45,18 +45,37 @@ func readMessage(reader io.Reader) (string, error) {
 }
 
 func parseMessage(raw string) (*message, error) {
-	parts := strings.Split(raw, " ")
-	var prefix, command string
+	var prefix, command, rest string
 	var parameters []string
 
-	if strings.HasPrefix(parts[0], ":") {
-		prefix = parts[0][1:]
-		command = parts[1]
-		parameters = parts[2:]
+	if strings.HasPrefix(raw, ":") {
+		parts := strings.SplitN(raw, " ", 3)
+		if len(parts) != 3 {
+			return nil, errors.New("message invalid: " + raw)
+		}
+		prefix, command, rest = parts[0][1:], parts[1], parts[2]
+		if prefix == "" {
+			return nil, errors.New("message invalid: " + raw)
+		}
 	} else {
-		prefix = ""
-		command = parts[0]
-		parameters = parts[1:]
+		parts := strings.SplitN(raw, " ", 2)
+		if len(parts) != 2 {
+			return nil, errors.New("message invalid: " + raw)
+		}
+		command, rest = parts[0], parts[1]
+	}
+
+	if command == "PRIVMSG" {
+		parameters = strings.SplitN(rest, " ", 2)
+		if len(parameters) != 2 {
+			return nil, errors.New("message invalid: " + raw)
+		}
+		parameters[1] = parameters[1][1:]
+		if parameters[1] == "" {
+			return nil, errors.New("message invalid: " + raw)
+		}
+	} else {
+		parameters = strings.Split(rest, " ")
 	}
 
 	return &message{
@@ -71,5 +90,5 @@ func dispatch(msg *message, handlers *CommandHandlers) CommandHandler {
 }
 
 func main() {
-	fmt.Printf("It's alive!\n")
+	fmt.Print("It's alive!\n")
 }
